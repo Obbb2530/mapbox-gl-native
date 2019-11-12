@@ -35,6 +35,16 @@ std::string Formatted::toString() const {
     return result;
 }
 
+bool Formatted::empty() const {
+    if (sections.empty()) {
+        return true;
+    }
+
+    return !std::any_of(sections.begin(), sections.end(), [](const FormattedSection& section) {
+        return !section.text.empty() || (section.image && !section.image->empty());
+    });
+}
+
 mbgl::Value Formatted::toObject() const {
     mapbox::base::ValueObject result;
     mapbox::base::ValueArray sectionValues;
@@ -58,6 +68,7 @@ mbgl::Value Formatted::toObject() const {
         } else {
             serializedSection.emplace("textColor", NullValue());
         }
+        serializedSection.emplace("image", section.image ? section.image->toValue() : NullValue());
         sectionValues.emplace_back(serializedSection);
     }
     result.emplace("sections", std::move(sectionValues));
