@@ -2,13 +2,47 @@
 #include <mbgl/math/minmax.hpp>
 #include <mbgl/util/i18n.hpp>
 
+namespace {
+char16_t PUAbegin = u'\uE000';
+char16_t PUAend = u'\uF8FF';
+} // namespace
+
 namespace mbgl {
-    
-void TaggedString::addSection(const std::u16string& sectionText, double scale, FontStack fontStack, optional<Color> textColor) {
+
+void TaggedString::addTextSection(const std::u16string& sectionText,
+                                  double scale,
+                                  FontStack fontStack,
+                                  optional<Color> textColor) {
     styledText.first += sectionText;
     sections.emplace_back(scale, fontStack, std::move(textColor));
     styledText.second.resize(styledText.first.size(), sections.size() - 1);
     supportsVerticalWritingMode = nullopt;
+}
+
+void TaggedString::addImageSection(const std::string& imageID) {
+    const auto& nextImageSectionCharCode = getNextImageSectionCharCode();
+    if (!nextImageSectionCharCode) {
+        return;
+    }
+
+    styledText.first += *nextImageSectionCharCode;
+    sections.emplace_back(imageID);
+    styledText.second.resize(styledText.first.size(), sections.size() - 1);
+}
+
+optional<char16_t> TaggedString::getNextImageSectionCharCode() {
+    if (!imageSectionID) {
+        imageSectionID = PUAbegin;
+        return imageSectionID;
+    }
+
+    if (*imageSectionID >= PUAend) {
+        assert(false);
+        return nullopt;
+    }
+
+    (*imageSectionID)++;
+    return imageSectionID;
 }
 
 void TaggedString::trim() {
