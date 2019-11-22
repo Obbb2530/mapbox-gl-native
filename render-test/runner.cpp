@@ -316,15 +316,19 @@ bool TestRunner::checkRenderTestResults(mbgl::PremultipliedImage&& actualImage, 
         }
     }
 
-#if !TEST_READ_ONLY
-    if (getenv("UPDATE_METRICS")) {
+// #if !TEST_READ_ONLY
+//     if (getenv("UPDATE_METRICS")) {
         if (!metadata.metrics.isEmpty()) {
+            const std::string::size_type rootLength = manifest.getTestRootPath().length();
+            auto id = expectations.front().string();
+            id = id.substr(rootLength + 1, id.length() - rootLength - 2);
             mbgl::filesystem::create_directories(expectations.back());
             mbgl::util::write_file(expectations.back().string() + "/metrics.json", serializeMetrics(metadata.metrics));
+            printf("Updating metrics for file ");
             return true;
         }
-    }
-#endif
+//     }
+// #endif
 
     mbgl::filesystem::path expectedMetricsPath;
     for (auto rit = expectations.rbegin(); rit != expectations.rend(); ++rit) {
