@@ -1,3 +1,11 @@
+## Update
+
+**Work on the Mapbox Maps SDK for Android is now happening at https://github.com/mapbox/mapbox-gl-native-android.**
+
+Please see the README at https://github.com/mapbox/mapbox-gl-native-android for the most up-to-date information on the Maps SDK for Android.
+
+The information below is kept in this file, but it's no longer being maintained or updated. There's no guarantee that it is correct.
+
 # [Mapbox Maps SDK for Android](https://www.mapbox.com/android-sdk/)
 
 [![Circle CI build status](https://circleci.com/gh/mapbox/mapbox-gl-native.svg?style=shield)](https://circleci.com/gh/mapbox/workflows/mapbox-gl-native/tree/master)
